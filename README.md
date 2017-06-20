@@ -3,10 +3,12 @@ Our internal matlab code to run the panels system, retains core functions from t
 - https://bitbucket.org/iorodeo/panels/
 - https://bitbucket.org/mreiser/panels/
 
+TODO:
+- tidy up: remove log files, duplicates, obsolete tests
+- consolidate code into valid tests, example, pattern/function/configuration utilities, controller interface
+- remove extra pop-up windows
 
-
-Documentation temporary:
-
+Documentation temporarily here:
 ```
 Patterns are arranged in a straightforward, but involved way.
 
