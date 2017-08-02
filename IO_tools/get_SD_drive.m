@@ -8,8 +8,14 @@ load('Pcontrol_paths.mat');
 if exist('myPCCfg.mat','file')
     load([controller_path '\myPCCfg'],'-mat');
     if isfield(myPCCfg, 'SDDrive')
+        
+        if(myPCCfg.SDDrive == -1)
+             defaultDrive = {'E'};
+        else
+        
         SD_drive = myPCCfg.SDDrive;
         defaultDrive = {SD_drive};
+        end
     end
 else
     defaultDrive = {'E'};
