@@ -58,7 +58,7 @@ end
 
 for index_x = 1:NumPatsX
         for index_y = 1:NumPatsY
-            [ index_x index_y ]
+            [ index_x index_y ];
             %compute the pattern_number:
             Pattern_number = (index_y - 1)*NumPatsX + index_x;
             for i = 1:NumPanels
@@ -66,7 +66,7 @@ for index_x = 1:NumPatsX
                 PanMat = Pats(BitMapIndex(i).row_range, BitMapIndex(i).column_range, index_x, index_y);
                 if (row_compression)
                     if (gs_val == 1)
-                        frame_pat(i) = vec2dec_fast(PanMat, gs_val);  
+                        frame_pat(i) = vec2dec_fast(PanMat, gs_val);   %#ok<AGROW>
                     else % only support the gs_val <= 4 case
                         if (gs_val > 4)
                             error('gs_val = 1-4 cases are supported!');

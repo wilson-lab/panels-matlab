@@ -167,11 +167,13 @@ load('Pcontrol_paths.mat');
 cd(pattern_path)
 [FileName,PathName] = uigetfile('P*.mat','Select a Pattern File');
 if (all(FileName ~= 0))
-    load([PathName FileName]);
-    handles.pattern = pattern;
-
-    handles.pattern_x_size = pattern.x_num;
-    handles.pattern_y_size = pattern.y_num;
+    load_pattern = load([PathName FileName]);
+    if exist('panel_pattern')==0 %#ok<EXIST>
+        panel_pattern = load_pattern.pattern;
+    end
+    handles.pattern = panel_pattern;
+    handles.pattern_x_size = panel_pattern.x_num;
+    handles.pattern_y_size = panel_pattern.y_num;
     handles.x_pos = 1;
     set(handles.x_pos_val, 'string', num2str(handles.x_pos));
     set(handles.x_pos_val, 'enable', 'on');

@@ -13,36 +13,39 @@ load('Pcontrol_paths.mat');
 dos(['del /Q "' temp_path '\*.pat"']); % SS
 
 for j = 1:num_patterns
-    load([file_list(j).PathName '\' file_list(j).FileName]);
+    load_pattern = load([file_list(j).PathName '\' file_list(j).FileName]);
+    if exist('panel_pattern')==0 %#ok<EXIST>
+        panel_pattern = load_pattern.pattern;
+    end
  
     % determine if row_compression is on
     row_compression(j) = 0;
-    if isfield(pattern, 'row_compression') % for backward compatibility
-        if (pattern.row_compression)
+    if isfield(panel_pattern, 'row_compression') % for backward compatibility
+        if (panel_pattern.row_compression)
             row_compression(j) = 1;
         end
     end
     
     if (row_compression(j))
-        current_frame_size(j) = pattern.num_panels*pattern.gs_val;
+        current_frame_size(j) = panel_pattern.num_panels*panel_pattern.gs_val;
     else
-        current_frame_size(j) = pattern.num_panels*pattern.gs_val*8;
+        current_frame_size(j) = panel_pattern.num_panels*panel_pattern.gs_val*8;
     end
     
     blocks_per_frame(j) = ceil(current_frame_size(j)/block_size);
-    current_num_frames(j) = pattern.x_num*pattern.y_num;
+    current_num_frames(j) = panel_pattern.x_num*panel_pattern.y_num;
     num_blocks_needed(j) = blocks_per_frame(j)*current_num_frames(j);
     
     if (row_compression(j)) % hack - append 10 to gs_val to let controller know that it is a row_compressed pattern w/o adding more to header block
-        Header_block(1:8) = [dec2char(pattern.x_num,2), dec2char(pattern.y_num,2), pattern.num_panels, 10 + pattern.gs_val, dec2char(current_frame_size(j),2)];
+        Header_block(1:8) = [dec2char(panel_pattern.x_num,2), dec2char(panel_pattern.y_num,2), panel_pattern.num_panels, 10 + panel_pattern.gs_val, dec2char(current_frame_size(j),2)];
     else
-        Header_block(1:8) = [dec2char(pattern.x_num,2), dec2char(pattern.y_num,2), pattern.num_panels, pattern.gs_val, dec2char(current_frame_size(j),2)];
+        Header_block(1:8) = [dec2char(panel_pattern.x_num,2), dec2char(panel_pattern.y_num,2), panel_pattern.num_panels, panel_pattern.gs_val, dec2char(current_frame_size(j),2)];
     end
     % set up SD structure with pattern info
-    SD.x_num(j) = pattern.x_num;
-    SD.y_num(j) = pattern.y_num;
-    SD.num_panels(j) = pattern.num_panels;
-    SD.gs_val(j) = pattern.gs_val; % unclear if we should change this to reflect 11, 12, 13 hack
+    SD.x_num(j) = panel_pattern.x_num;
+    SD.y_num(j) = panel_pattern.y_num;
+    SD.num_panels(j) = panel_pattern.num_panels;
+    SD.gs_val(j) = panel_pattern.gs_val; % unclear if we should change this to reflect 11, 12, 13 hack
     SD.frame_size(j) = current_frame_size(j);
     SD.pattNames{j} = file_list(j).FileName;
     
@@ -56,7 +59,7 @@ for j = 1:num_patterns
         % always forced to start frame at a block boundary
         pat_start_address = (i - 1)*current_frame_size(j) + 1;
         pat_end_address = pat_start_address + current_frame_size(j) - 1;    
-        Pattern_Data(sd_start_address:sd_end_address) = pattern.data(pat_start_address:pat_end_address);
+        Pattern_Data(sd_start_address:sd_end_address) = panel_pattern.data(pat_start_address:pat_end_address);
         block_indexer = block_indexer + blocks_per_frame(j);
     end    
 
@@ -79,6 +82,6 @@ for j = 1:num_patterns
     fid = fopen([temp_path '\' patFileName] , 'w');
     fwrite(fid, Data_to_write(:),'uchar');
     fclose(fid);
-    display([num2str(j) ' of ' num2str(num_patterns) ' patterns written to temporary folder ', patFileName, ', of size ' num2str(size(Data_to_write,2)) ' bytes']);
+    disp([num2str(j) ' of ' num2str(num_patterns) ' patterns written to temporary folder ', patFileName, ', of size ' num2str(size(Data_to_write,2)) ' bytes']);
 end
 

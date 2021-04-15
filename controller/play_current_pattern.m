@@ -52,13 +52,15 @@ set(gcf,'DoubleBuffer','on');
 guidata(hObject, handles);
 
 global currentState;
-load('Pcontrol_paths.mat');
+load('Pcontrol_paths.mat'); %#ok<LOAD>
 pattFullName = fullfile(pattern_path, currentState.pattName);
-load(pattFullName);
+load_pattern = load(pattFullName);
     
 if (all(pattFullName ~= 0))
-    handles.pattern = pattern;
-
+    if exist('panel_pattern')==0 %#ok<EXIST>
+        panel_pattern = load_pattern.pattern;
+    end
+    handles.pattern = panel_pattern;
     handles.pattern_x_size = pattern.x_num;
     handles.pattern_y_size = pattern.y_num;
     handles.x_pos = 1;
