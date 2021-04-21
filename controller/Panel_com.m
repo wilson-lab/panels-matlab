@@ -10,6 +10,7 @@ switch lower(command)
     case 'start'
         %	Start display: panel_addr, 0x20	-panel address not used
         send_serial( char([1 32]));
+        
     case 'stop'
         %	Stop display: panel_addr, 0x30
         send_serial( char([1 48]));
