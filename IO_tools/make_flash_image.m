@@ -13,10 +13,11 @@ load('Pcontrol_paths.mat');
 dos(['del /Q "' temp_path '\*.pat"']); % SS
 
 for j = 1:num_patterns
-    load_pattern = load([file_list(j).PathName '\' file_list(j).FileName]);
-    if exist('panel_pattern')==0 %#ok<EXIST>
-        panel_pattern = load_pattern.pattern;
-    end
+    load_pattern = load(fullfile(file_list(j).PathName,  file_list(j).FileName));
+    panel_pattern = load_pattern.pattern;
+    %if exist('panel_pattern')==0 %#ok<EXIST>
+    %    panel_pattern = load_pattern.pattern;
+    %end
  
     % determine if row_compression is on
     row_compression(j) = 0;
