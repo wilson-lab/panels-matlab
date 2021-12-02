@@ -68,7 +68,7 @@ for j = 1:num_functions
         function_Data = signed_16Bit_to_char(func);     
     
     else
-        disp('The function name %s is incorrect\n',file_list(j).FileName);
+        fprintf('The function name %s is incorrect\n',file_list(j).FileName);
     end
     %now we add 100 byte OFFSET to speed up the sd card reading spead
     % now write all of the frame info
